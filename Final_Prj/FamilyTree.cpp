@@ -9,6 +9,7 @@ void addNewMember(FamilyTree& tree) {
 		cout << "Cay pha he rong, them thanh vien dau tien vao cay!";
 		Node* newEle = getNode();
 		tree.head = newEle;
+		cout << "\nDa them thanh vien dau tien!\n";
 	}
 	else {
 		cout << "\nCay pha he khong rong. Vui long chon mot trong cac tuy chon sau:\n";
@@ -35,7 +36,7 @@ void addNewMember(FamilyTree& tree) {
 		{
 		case 1:
 			cout << "\nThem cha.";
-			addParent(existingMem);
+			addParent(tree, existingMem);
 			break;
 		case 2:
 			cout << "\nThem con.";
@@ -51,8 +52,22 @@ void addNewMember(FamilyTree& tree) {
 	}
 }
 
-void addParent(Node* ptr) {
-
+void addParent(FamilyTree &tree, Node* ptr) {
+	if (ptr->parent) {
+		cout << "Thanh vien " << ptr->name << " da co cha!";
+		return;
+	}
+	else {
+		Node* parent = getNode();
+		parent->child = ptr;
+		ptr->parent = parent;
+		if (tree.head == ptr)
+		{
+			tree.head = parent;
+		}
+		cout << "\nDa them cha.";
+		return;
+	}
 }
 
 void addChild(Node* ptr) {
@@ -154,4 +169,56 @@ void printInfoMem(FamilyTree& tree) {
 			}
 		}
 	}
+}
+
+void option2(FamilyTree& tree) {
+	if (!tree.head) {
+		cout << "\nCay rong, khong the them con vao mot thanh vien da co trong pha he!\n";
+		return;
+	}
+	string name;
+	cout << "Nhap ten thanh vien ton tai trong cay pha he: ";
+	cin >> name;
+	cin.clear();
+
+	Node* existingMem = searchPerson(tree, name);
+	if (!existingMem) {
+		cout << "Khong tim thay thanh vien " << name << "\n";
+	}
+	else {
+		addChild(existingMem);
+	}
+}
+
+void console(FamilyTree& tree) {
+	int option;
+	do {
+		system("cls");
+		cout << "===== MENU =====";
+		cout << "\n1. Them thanh vien moi vao cay pha he.";
+		cout << "\n2. Them con vao mot thanh vien trong pha he.";
+		cout << "\n3. Tim va hien thi thong tin cua mot thanh vien cung voi cac con cua ho.";
+		cout << "\n4. Thoat.";
+		cout << "\nNhap lua chon: ";
+		cin >> option;
+		switch (option) {
+		case 1:
+			addNewMember(tree);
+			system("pause");
+			break;
+		case 2:
+			option2(tree);
+			system("pause");
+			break;
+		case 3:
+			if (!tree.head) {
+				cout << "\nCay rong, khong the tim kiem thanh vien da co trong pha he!\n";
+			}
+			else{
+				printInfoMem(tree);
+			}	
+			system("pause");
+			break;
+		}
+	} while (option != 4);
 }
