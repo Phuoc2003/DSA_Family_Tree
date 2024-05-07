@@ -82,7 +82,7 @@ void addChild(Node* ptr) {
 			lastChild = lastChild->sibling;
 		}
 		lastChild->sibling = child;
-		lastChild->parent = ptr->parent;
+		child->parent = ptr;
 	}
 	cout << "\nDa them con.";
 }
@@ -104,41 +104,42 @@ void addSibling(Node* ptr) {
 }
 
 Node* traverseSibling(Node* ptr, string name) {
-	Node* p = ptr->sibling;
-	while (p) {
-		Node* temp=NULL;
-		if (p->name == name)
-			return p;
-		else if ((temp == traverseChild(p, name)) != NULL)
-			return temp;
+	ptr = ptr->sibling;
+	while (ptr) {
+		Node* child= traverseChild(ptr, name);
+		if (ptr->name == name)
+			return ptr;
+		else if (child)
+			return child;
 		else
-			p = p->sibling;
+			ptr = ptr->sibling;
 	}
 	return NULL;
 }
 
 Node* traverseChild(Node* ptr, string name) {
-	Node* p = ptr->child;
-	while (p) {
-		Node* temp = NULL;
-		if (p->name == name)
-			return p;
-		else if ((temp == traverseSibling(p, name)) != NULL)
-			return temp;
+	ptr = ptr->child;
+	while (ptr) {
+		Node* sibling = traverseSibling(ptr, name);
+		if (ptr->name == name)
+			return ptr;
+		else if (sibling)
+			return sibling;
 		else
-			p = p->child;
+			ptr = ptr->child;
 	}
 	return NULL;
 }
 
 Node* searchPerson(FamilyTree& tree, string name) {
-	Node* temp = NULL;
+	Node* child = traverseChild(tree.head, name);
+	Node* sibling = traverseSibling(tree.head, name);
 	if (tree.head->name == name)
 		return tree.head;
-	else if ((temp = traverseSibling(tree.head, name)) != NULL)
-		return temp;
-	else if ((temp == traverseChild(tree.head, name)) != NULL)
-		return temp;
+	else if (child)
+		return child;
+	else if (sibling)
+		return sibling;
 	return NULL;
 }
 
